@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="LO17-TomcatServer:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/LO17_TomcatServer_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="LO17-TomcatServer/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="LO17-TomcatServer" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="postgresql-9.0-801.jdbc4" />
+          <element id="library" level="project" name="antlrworks-1.4" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

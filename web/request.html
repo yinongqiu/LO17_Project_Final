@@ -1,0 +1,23 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+</head>
+<body>
+
+<nav class="navbar navbar-dark fixed-top bg-dark h-100 flex-md-nowrap p-0 shadow rounded" id="nav">
+    <form action = "servlet/LanceRequete" target = "content" class="w-100 d-flex mx-3">
+        <div class="w-100 px-3 d-flex flex-row align-items-center justify-content-around">
+            <input name=requete class="form-control form-control-dark mx-2 px-2" type="text" placeholder="Entrez une requête" aria-label="Search">
+            <button type="submit" class="btn btn-lg btn-light mx-2" id="searchButton"><i class="fas fa-search"></i></button>
+        </div>
+    </form>
+
+</nav>
+</body>
+</html>
