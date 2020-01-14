@@ -26,13 +26,14 @@ public class Application {
         req = normHelper.replaceFromDic(req, DictionnaryName.stoplist);
         log.add(0,"After stoplist : "+req);
         req = normHelper.replaceFromDic(req, DictionnaryName.structure);
-        log.add(0,"After structure : "+req);
         req = normHelper.replaceFromDic(req, DictionnaryName.lexique,param);
         if (req==null){
             log.add("En cours de modifier la requête");
         }
         else{
             log.add(0,"After orthographe : "+req);
+            req = normHelper.replaceFromDic(req, DictionnaryName.structure);
+            log.add(0,"After structure : "+req);
         }
 
         return req;
@@ -65,8 +66,14 @@ public class Application {
         }
         s=normalisation(s,param);
         //System.out.println(s);
-        s=generateSQL(s);
-        log.add(0,"Requête SQL:"+s);
+        if (s!=null){
+            s=generateSQL(s);
+            log.add(0,"Requête SQL:"+s);
+        }
+        else{
+            log.add(0,"En cours de modifier la requête.");
+        }
+
         //interrogPostgresql.interroger(s);
         //s = scanner.nextLine();
         return s;

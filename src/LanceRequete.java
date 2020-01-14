@@ -180,14 +180,14 @@ public class LanceRequete extends HttpServlet {
 		String ambigWord=Lexique.getAmbigWord();
 		out.println("<form action=\"LanceRequete\">" +
 				"<div class=\"alert alert-warning alert-dismissible fade show\" role=\"alert\">\n" +
-				"<strong>  On a trouvé quelques mots similaires de mot\""+ambigWord+"\" pour vous. Veuillez choisir un mot de la liste ci-dessous.</strong>\n" +
+				"<strong>  On a trouvé quelques mots similaires de mot \""+ambigWord+"\" pour vous. Veuillez choisir un mot de la liste ci-dessous.</strong>\n" +
 				"<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">\n" +
 				"<span aria-hidden=\"true\">&times;</span>\n" +
 				"</button>\n" +
 				"</div>\n" +
-				"<div class=\"btn-group-vertical\" role=\"group\" aria-label=\"Basic example\">\n"
+				"<div class=\"btn-group-vertical w-100 px-3\" role=\"group\" aria-label=\"Basic example\">\n"
 		);
-		out.println("<button type=\"submit\" class=\"btn btn-secondary\" name=option value=\"0\">"+ambigWord+"</button>");
+		out.println("<button type=\"submit\" class=\"btn btn-dark\" name=option value=\"0\">"+ambigWord+"</button>");
 		int i=1;
 		for (String s:optionList
 			 ) {
