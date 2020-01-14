@@ -1,4 +1,4 @@
-// $ANTLR 3.5.1 /Users/yvonne/Documents/GI/GI04/LO17/Projet_Indexation/LO17-TomcatServer/src/files/TDAntlr/tal_sql.g 2020-01-08 12:46:13
+// $ANTLR 3.5.1 /Users/yvonne/Documents/GI/GI04/LO17/Projet_Indexation/LO17-TomcatServer/src/files/TDAntlr/tal_sql.g 2020-01-14 02:16:00
 package GenerationSQL;
 import org.antlr.runtime.*;
 import java.util.Stack;

@@ -13,6 +13,9 @@ public class Lexique {
     private static int seuilLettresCommunes = 4;
     private static int proxMin = 70;
     private static int distanceMax = 2;
+    private static ArrayList<String> optionList;
+    private static String ambigWord;
+    public static boolean paramUsed;
 
     public Lexique(HashMap<String, String> dic) {
         dictionnaire=dic;
@@ -131,8 +134,9 @@ public class Lexique {
         return listLemme;
     }
 
-    private void printLemmeList(ArrayList<String> lemmeList,String mot){
-        int ind=1;
+    public static ArrayList getOptionList(){
+        return optionList;
+        /*int ind=1;
         System.out.print("liste de lemmes candidats de \"" + mot + "\" : [");
         for (String s:
                 lemmeList) {
@@ -140,7 +144,19 @@ public class Lexique {
             ind++;
         }
         System.out.println("]");
-        System.out.println("Veuillez choisir un lemme souhaité, tapez 0 pour choisir le mot original");
+        System.out.println("Veuillez choisir un lemme souhaité, tapez 0 pour choisir le mot original");*/
+    }
+
+    public static void initOptionList(){
+        optionList=null;
+    }
+
+    public static String getAmbigWord(){
+        return ambigWord;
+    }
+
+    public static void initAmbigWord(){
+        ambigWord=null;
     }
 
     private boolean isNumeric(String str){
@@ -149,8 +165,9 @@ public class Lexique {
         return isNum.matches();
     }
 
-    public String replaceTokenByLemme(String str){
+    public String replaceTokenByLemme(String str,int option){
         try{
+            paramUsed=false;
             if (isNumeric(str)) {
                 return str;
             }
@@ -160,20 +177,18 @@ public class Lexique {
             } else if (lemmeList.size() == 1) {
                 return lemmeList.get(0);
             } else {
-                String choix;
-                while (true) {
-                    printLemmeList(lemmeList, str);
-                    Scanner scan = new Scanner(System.in);
-                    choix = scan.nextLine();
-                    if (Integer.parseInt(choix) <= lemmeList.size()) {
-                        if (Integer.parseInt(choix) == 0) {
-                            return str;
-                        } else {
-                            return lemmeList.get(Integer.parseInt(choix) - 1);
-                        }
-                    } else {
-                        printLemmeList(lemmeList, str);
-                        System.out.println("Veuillez saisir un integer, tapez 0 pour choisir le mot origine");
+                if (option==-1){
+                    optionList=lemmeList;
+                    ambigWord=str;
+                    return null;
+                }
+                else{
+                    paramUsed=true;
+                    if (option==0){
+                        return str;
+                    }
+                    else{
+                        return lemmeList.get(option-1);
                     }
                 }
             }

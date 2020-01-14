@@ -3327,7 +3327,8 @@ daniel 	daniel
 danois 	danois 
 danone 	danone 
 danube 	danube 
-dao 	dao 
+dao 	dao
+dans 	dans
 darwin 	darwin
 darwinien 	darwinien
 darwinienne 	darwinienne

@@ -1,10 +1,14 @@
 donne 	vouloir
+donnez-moi 	vouloir
+listez-moi 	vouloir
 veux 	vouloir
 voudrais 	vouloir
 cherche 	vouloir
 affiche 	vouloir
 afficher 	vouloir
 souhaites 	vouloir
+aimerais 	vouloir
+aimerai 	vouloir
 savoir 	vouloir
 voir 	vouloir
 quel 	vouloir
@@ -40,6 +44,7 @@ concernant 	mot
 évoquant 	mot
 sur 	mot
 mots 	mot
+sujet 	mot
 combien 	nombre
 contact 	auteur
 contacts  	auteur

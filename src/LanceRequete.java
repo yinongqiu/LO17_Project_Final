@@ -1,3 +1,5 @@
+import Normalisation.Lexique;
+
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -8,13 +10,11 @@ import java.util.Collections;
 
 
 public class LanceRequete extends HttpServlet {
-	String username;
-	String password;
-	String url;
-	String requete ="";
+	private static String username = "lo17xxx";
+	private static String password = "dblo17";
+	private static String url = "jdbc:postgresql://tuxa.sme.utc/dblo17";
 	String nom;
 	int nbre;
-	ArrayList<String> log=new ArrayList<>();
 
 	private void addHtmlHeader(PrintWriter out){
 		out.println("<html>");
@@ -45,8 +45,9 @@ public class LanceRequete extends HttpServlet {
 		out.println("<div class=\"d-flex flex-column flex-md-row w-100 justify-content-around\">" +
 				"<div class=\"col-md-5 mt-2\">" +
 				"<div class=\"card mb-4 shadow-sm text-center\">" +
-				"<div class=\"card-header\">" +
+				"<div class=\"card-header d-flex flex-row justify-content-center\">" +
 				"<h4 class=\"my-0 font-weight-normal text-align-center\">Logs</h4>" +
+				"<form action=\"LanceRequete\"><button type=\"submit\" name=\"clear\" value=\"true\" class=\"btn btn-lg btn-light ml-auto\"><i class=\"fas fa-trash\"></i></button></form>"+
 				"</div>" +
 				"<div class=\"card-body\">"+
 				"<div class=\"table-responsive\">" +
@@ -57,96 +58,149 @@ public class LanceRequete extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
     throws IOException, ServletException
     {
+	ArrayList<Integer> param=Application.getParam();
 	response.setContentType("text/html");
 	PrintWriter out = response.getWriter();
 	addHtmlHeader(out);
-
-
-	// ---- configure START
-	username = "lo17xxx";
-	password = "dblo17";
-	// The URL that will connect to TECFA's MySQL server
-        // Syntax: jdbc:TYPE:machine:port/DB_NAME
-        url = "jdbc:postgresql://tuxa.sme.utc/dblo17";
-	// dans certaines configurations locales il faut d�finir l'url par :
-	// url = "jdbc:postgresql://tuxa.sme.utc
-	// ---- configure END
-
-	String requete;
 	addLog(out);
-	requete = request.getParameter("requete");
-	requete = Application.run(requete);
+	int par;
+	String clear;
+
+	try{
+		if (request.getParameter("requete")!=null){
+			Application.setRequete(request.getParameter("requete"));
+			Application.initParam();
+		}
+	}
+	catch (Exception e){}
+	try{
+		par= Integer.parseInt(request.getParameter("option"));
+		Application.addToParam(par);
+	}
+	catch (Exception e){}
+		try{
+			clear= request.getParameter("clear");
+			if (clear.equals("true")){
+				Application.clearLog();
+			}
+		}
+		catch (Exception e){}
+	String requete=Application.getRequete();
+	requete = Application.run(requete,param);
 	ArrayList<String> log=Application.getLog();
-	Collections.reverse(log);
+
 	for (String l : log){
 		out.println("<tr><td>"+l+"</td></tr>");
 	}
 	out.println("</tbody></table>"+"</div>"+"</div>\n" +
-			"\t</div> \n" +
-			"\t</div>");
+			"</div> \n" +
+			"</div>");
 	out.println("<div class=\"col-md-7 mt-2\"><div class=\"card mb-4 shadow-sm text-center\">\n" +
-				"      <div class=\"card-header\">\n" +
+				"      <div class=\"card-header\">" +
 				"        <h4 class=\"my-0 font-weight-normal text-align-center\">Résultats</h4>\n" +
-				"      </div>\n" +
-				"      <div class=\"card-body\">\n" +
-				"        <div class=\"table-responsive\">\n" +
+				"      </div>" +
+				"      <div class=\"card-body\">" +
+				"        <div class=\"table-responsive\">" +
 				"        <table class=\"table table-striped table-sm text-center table-hover\">"
 	);
-	if (requete != null) {
-		// INSTALL/load the Driver (Vendor specific Code)
-		try {
-			Class.forName("org.postgresql.Driver");
-			} catch(ClassNotFoundException e) {
-	    		System.err.print("ClassNotFoundException: ");
-	    		System.err.println(e.getMessage());
-			}
-		try {
-			Connection con;
-			Statement stmt;
-			// Establish Connection to the database at URL with usename and password
-			con = DriverManager.getConnection(url, username, password);
-			stmt = con.createStatement();
-			// Send the query and bind to the result set
-			ResultSet rs = stmt.executeQuery(requete);
-			ResultSetMetaData rsmd=rs.getMetaData();
-			nbre=rsmd.getColumnCount();
-			ArrayList<String> columnNames = new ArrayList<>();
-
-			out.println("<thead class=\"thead-dark\"><tr>");
-			for (int i = 1; i <= nbre; i++) {
-				out.println("<th>"+rsmd.getColumnName(i)+"</th>");
-			}
-			out.println("</tr></thead>");
-			while (rs.next()) {
-				out.print("<tr>");
-				for (int i=1; i<=nbre;i++){
-				nom = rsmd.getColumnName(i);
-				String s = rs.getString(nom);
-				out.print("<td>"+s+"</td>");
-				}
-				out.print("</tr>");
-
-			}
-		// Close resources
-		stmt.close();
-		con.close();
-		}
-		// print out decent erreur messages
-		catch(SQLException ex) {
-			System.err.println("==> SQLException: ");
-			while (ex != null) {
-				System.out.println("Message:   " + ex.getMessage ());
-				System.out.println("SQLState:  " + ex.getSQLState ());
-				System.out.println("ErrorCode: " + ex.getErrorCode ());
-				ex = ex.getNextException();
-				System.out.println("");
-			}
-		}
-
-	}
+	processRequest(requete,out);
 	addHtmlFooter(out);
 	}
 
+	private void processRequest(String requete, PrintWriter out){
+		if (requete != null && !requete.isEmpty()) {
+			// INSTALL/load the Driver (Vendor specific Code)
+			try {
+				Class.forName("org.postgresql.Driver");
+			} catch(ClassNotFoundException e) {
+				System.err.print("ClassNotFoundException: ");
+				System.err.println(e.getMessage());
+			}
+			try {
+				Connection con;
+				Statement stmt;
+				// Establish Connection to the database at URL with usename and password
+				con = DriverManager.getConnection(url, username, password);
+				stmt = con.createStatement();
+				// Send the query and bind to the result set
+				ResultSet rs = stmt.executeQuery(requete);
+				ResultSetMetaData rsmd=rs.getMetaData();
+				nbre=rsmd.getColumnCount();
+				ArrayList<String> columnNames = new ArrayList<>();
+				out.println("<thead class=\"thead-dark\"><tr>");
+				for (int i = 1; i <= nbre; i++) {
+					out.println("<th>"+rsmd.getColumnName(i)+"</th>");
+				}
+				out.println("</tr></thead>");
+				while (rs.next()) {
+					out.print("<tr>");
+					for (int i=1; i<=nbre;i++){
+						nom = rsmd.getColumnName(i);
+						String s = rs.getString(nom);
+						if (nom.equals("fichier")){
+							out.print("<td><a href=\"/LO17_TomcatServer_war_exploded/OLD_BULLETINS_LO17/"+s+"\">"+s+"</a></td>");
+						}
+						else{
+							out.print("<td>"+s+"</td>");
+						}
+					}
+					out.print("</tr>");
+
+				}
+				// Close resources
+				stmt.close();
+				con.close();
+			}
+			// print out decent erreur messages
+			catch(SQLException ex) {
+				out.println("==> SQLException: ");
+				while (ex != null) {
+					out.println("Message:   " + ex.getMessage ());
+					out.println("SQLState:  " + ex.getSQLState ());
+					out.println("ErrorCode: " + ex.getErrorCode ());
+					ex = ex.getNextException();
+					out.println("");
+				}
+			}
+
+		}
+		else{
+			ArrayList optionList= Lexique.getOptionList();
+			if (Lexique.getAmbigWord()==null){
+				return;
+			}
+			printOptionList(out);
+
+
+		}
+	}
+
+	private void printOptionList(PrintWriter out){
+		ArrayList<String> optionList=Lexique.getOptionList();
+		String ambigWord=Lexique.getAmbigWord();
+		out.println("<form action=\"LanceRequete\">" +
+				"<div class=\"alert alert-warning alert-dismissible fade show\" role=\"alert\">\n" +
+				"<strong>  On a trouvé quelques mots similaires de mot\""+ambigWord+"\" pour vous. Veuillez choisir un mot de la liste ci-dessous.</strong>\n" +
+				"<button type=\"button\" class=\"close\" data-dismiss=\"alert\" aria-label=\"Close\">\n" +
+				"<span aria-hidden=\"true\">&times;</span>\n" +
+				"</button>\n" +
+				"</div>\n" +
+				"<div class=\"btn-group-vertical\" role=\"group\" aria-label=\"Basic example\">\n"
+		);
+		out.println("<button type=\"submit\" class=\"btn btn-secondary\" name=option value=\"0\">"+ambigWord+"</button>");
+		int i=1;
+		for (String s:optionList
+			 ) {
+			out.println("<button type=\"submit\" class=\"btn btn-secondary\" name=option value=\""+i+"\">"+s+"</button>\n");
+			i++;
+		}
+		out.println("</div>\n" +
+				"</form>\n"
+		);
+		Lexique.initAmbigWord();
+		Lexique.initOptionList();
+
+	}
 
 
 }

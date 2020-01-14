@@ -11,10 +11,10 @@
 <body>
 
 <nav class="navbar navbar-dark fixed-top bg-dark h-100 flex-md-nowrap p-0 shadow rounded" id="nav">
-    <form action = "servlet/LanceRequete" target = "content" class="w-100 d-flex mx-3">
+    <form action = "servlet/LanceRequete" method=GET target="frame-content" class="w-100 d-flex mx-3">
         <div class="w-100 px-3 d-flex flex-row align-items-center justify-content-around">
-            <input name=requete class="form-control form-control-dark mx-2 px-2" type="text" placeholder="Entrez une requête" aria-label="Search">
-            <button type="submit" class="btn btn-lg btn-light mx-2" id="searchButton"><i class="fas fa-search"></i></button>
+            <input name=requete class="form-control form-control-dark mx-2 px-2" type="text" placeholder="Entrez une requête">
+            <button type="submit" class="btn btn-lg btn-light mx-2"><i class="fas fa-search"></i></button>
         </div>
     </form>
 

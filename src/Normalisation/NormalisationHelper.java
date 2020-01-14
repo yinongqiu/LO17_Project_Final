@@ -65,6 +65,10 @@ public class NormalisationHelper {
     }
 
     public String replaceFromDic(String s,DictionnaryName dicStr){
+        return replaceFromDic(s,dicStr,new ArrayList<Integer>());
+    }
+
+    public String replaceFromDic(String s,DictionnaryName dicStr,ArrayList<Integer> param){
         String result="";
         ArrayList<String> strList=new ArrayList<>();
         char ponc=s.charAt(s.length()-1);
@@ -72,8 +76,21 @@ public class NormalisationHelper {
             try {
                 StringTokenizer tokenizer=new StringTokenizer(s.substring(0,s.length()-1),"\"'’<>«» ");
                 if (dicStr.equals(DictionnaryName.lexique)){
+                    int n=param!=null?param.size():0;
+                    int i=0;
                     while (tokenizer.hasMoreTokens()) {
-                        strList.add(_lexique.replaceTokenByLemme(tokenizer.nextToken()));
+                        int option=i<n?param.get(i):-1;
+                        String str=_lexique.replaceTokenByLemme(tokenizer.nextToken(),option);
+                        if (Lexique.paramUsed==true){
+                            i++;
+                        }
+                        if (str!=null){
+                            strList.add(str);
+                        }
+                        else{
+                            return null;
+                        }
+
                     }
                 }
                 else {
