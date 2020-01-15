@@ -1,20 +1,20 @@
 package Normalisation;
-import java.lang.reflect.Array;
+
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static java.lang.Math.*;
-
 public class Lexique {
     private static HashMap<String, String> dictionnaire = new HashMap<>();
     private static int seuilMax = 3; // Le nombre minimum de lettres d'un mot
     private static int seuilMin = 4; // La différence de longueur entre deux mots
     private static int seuilLettresCommunes = 4;
-    private static int proxMin = 70;
+    private static int proxMin = 62;
     private static int distanceMax = 2;
     private static ArrayList<String> optionList;
     private static String ambigWord;
+    private static ArrayList<String> log=new ArrayList<>();
     public static boolean paramUsed;
 
     public Lexique(HashMap<String, String> dic) {
@@ -81,6 +81,12 @@ public class Lexique {
                     }
                 }
             }
+            if (listLemme.size()>1){
+                log.add(0,"Méthode préfixe: Liste de lemmes candidats de mot "+mot+" générée");
+            }
+            if (listLemme.size()==1){
+                log.add(0,"Méthode préfixe: Mot "+mot+" est remplacé par mot "+listLemme.get(0)+".");
+            }
             return listLemme;
         }
     }
@@ -91,18 +97,36 @@ public class Lexique {
             listLemme.add(mot);
             return listLemme;
         }
-        int minDistance=99;
-        for (String motLex : dictionnaire.keySet()) {
-            int distance = levenshtein(motLex, mot);
-            if (distance <= distanceMax) {
-                if (distance<minDistance){
-                    minDistance=distance;
-                    listLemme.clear();
-                }
-                if (distance==minDistance) {
-                    listLemme.add(dictionnaire.get(motLex));
+        if (mot.length()==seuilMax+1){
+            for (String motLex : dictionnaire.keySet()) {
+                if (motLex.charAt(0)==mot.charAt(0)){
+                    int distance = levenshtein(motLex, mot);
+                    if (distance <= distanceMax) {
+                            listLemme.add(dictionnaire.get(motLex));
+                    }
                 }
             }
+        }
+        else{
+            int minDistance=99;
+            for (String motLex : dictionnaire.keySet()) {
+                int distance = levenshtein(motLex, mot);
+                if (distance <= distanceMax) {
+                    if (distance<minDistance){
+                        minDistance=distance;
+                        listLemme.clear();
+                    }
+                    if (distance==minDistance) {
+                        listLemme.add(dictionnaire.get(motLex));
+                    }
+                }
+            }
+        }
+        if (listLemme.size()>1){
+            log.add(0,"Méthode Levenshtein: Liste de lemmes candidats de mot "+mot+" générée");
+        }
+        if (listLemme.size()==1){
+            log.add(0,"Méthode Levenshtein: Mot "+mot+" est remplacé par mot "+listLemme.get(0)+".");
         }
         /*for (String motLex : dictionnaire.keySet()) {
             if (motLex.charAt(0)==mot.charAt(0)){
@@ -127,7 +151,7 @@ public class Lexique {
         if (listLemme.isEmpty()) {
             listLemme = searchLemmeLeven(mot);
             if (listLemme.isEmpty()) {
-                System.out.println("Aucun lemme trouvé pour le mot \""+mot+"\"");
+                log.add("Aucun lemme trouvé pour le mot \""+mot+"\"");
                 return listLemme;
             }
         }
@@ -198,6 +222,14 @@ public class Lexique {
             return str;
         }
 
+    }
+
+    public static void initLog(){
+        log.clear();
+    }
+
+    public static ArrayList<String> getLog(){
+        return log;
     }
 
 }

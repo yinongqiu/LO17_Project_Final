@@ -11586,7 +11586,7 @@ sentinelles 	sentinel
 sentions 	sentions 
 sentir 	sentir 
 sept 	sept
-septembre 	sept
+septembre 	septembre
 septentrionaux 	sept
 sera 	sera 
 seraient 	seraient 

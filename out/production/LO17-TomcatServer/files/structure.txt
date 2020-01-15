@@ -48,4 +48,3 @@ sujet 	mot
 combien 	nombre
 contact 	auteur
 contacts  	auteur
-vuex 	vouloir

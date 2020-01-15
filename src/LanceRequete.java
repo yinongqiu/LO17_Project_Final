@@ -171,7 +171,6 @@ public class LanceRequete extends HttpServlet {
 			}
 			printOptionList(out);
 
-
 		}
 	}
 

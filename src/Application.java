@@ -27,8 +27,10 @@ public class Application {
         log.add(0,"After stoplist : "+req);
         req = normHelper.replaceFromDic(req, DictionnaryName.structure);
         req = normHelper.replaceFromDic(req, DictionnaryName.lexique,param);
+        log.addAll(0,Lexique.getLog());
+        Lexique.initLog();
         if (req==null){
-            log.add("En cours de modifier la requête");
+            log.add(0,"En cours de modifier la requête");
         }
         else{
             log.add(0,"After orthographe : "+req);
@@ -69,9 +71,6 @@ public class Application {
         if (s!=null){
             s=generateSQL(s);
             log.add(0,"Requête SQL:"+s);
-        }
-        else{
-            log.add(0,"En cours de modifier la requête.");
         }
 
         //interrogPostgresql.interroger(s);
